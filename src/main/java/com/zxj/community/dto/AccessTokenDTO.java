@@ -1,6 +1,8 @@
 package com.zxj.community.dto;
 
-
+/**
+ * 请求令牌需要的数据
+ */
 public class AccessTokenDTO {
     private String client_id;
     private String client_secret;

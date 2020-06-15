@@ -1,7 +1,47 @@
  
-##cocoandgaga's community
- [springWeb文档]         (https://spring.io/guides/gs/serving-web-content/)
- [API登陆接入]         ( https://github.com/settings/applications/new)
- [Segment UI前端框架]  (https://semantic-ui.com/introduction/advanced-usage.html)
-# community
-springboot 社区 
+##cocoandgaga's community 
+ 笔记： 
+ 1、
+ [springWeb文档]         
+ https://spring.io/guides/gs/serving-web-content/
+ 2、
+ 前端框架
+ [Segment UI前端框架]  
+ https://semantic-ui.com/introduction/advanced-usage.html
+ 
+ [Bootstrap框架]
+ https://v3.bootcss.com/components/#media
+ 3、
+ 查阅Thymeleaf语法资料
+ [Thymeleaf官网]   
+  https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
+  
+ 4、
+  应用使用OAuth协议接入到gitee的授权登陆操作流程 
+  [OpenAPI]          
+  https://gitee.com/api/v5/oauth_doc#/list-item-2
+ 
+ 5、
+ spring热部署：
+ [Developer Tools]:
+ https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/htmlsingle/#using-boot-devtools
+ 
+  这个插件可以动态更新热部署过的页面
+  [LiveReload]
+  https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related
+  
+  idea相关操作
+  设置：ctrl+shit+alt+?--->Registry---->complier.automake.allow.when.app.running勾选
+  构建项目：Build Project
+  
+  6、数据表外键的体现
+  Question表字段creator关联User表字段account_id
+  model层拥有Question表的实体类和User表的实体类
+  dto层拥有QuestionDTo类，该类拥有Question表字段的类和一个private User user;
+  service层拥有QuestionService类，该类的功能是将Question表的creator值取出去查询User表并返回这个表对应id的user对象，然后添加到类型为QuestionDTO的list里，返回这个list
+  controller层调用service层的方法
+  
+  
+ 
+ 
+ 
