@@ -7,6 +7,9 @@
         <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+        <!--jQuery-->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
         <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -40,7 +43,10 @@
                         </li>
                         <li class="dropdown" th:if="${session.user!=null}">
                             <a href="#"
-                               class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
+                               class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span th:text="${session.user.getName()}"></span>
+                                <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu">
                                 <li><a href="#">用户消息</a></li>
                                 <li><a href="#">帮助中心</a></li>
@@ -58,28 +64,57 @@
             <div class="container-fluid main">
                 <div class="row">
                     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
-                        <h2>
-                             <div class="glyphicon glyphicon-list" aria-hidden="true">
-                                 <span>发现</span>
-                             </div>
-                        </h2>
+                        <h5>
+                             <span class="glyphicon glyphicon-list" aria-hidden="true">
+                                 提问广场
+                             <span/>
+                        </h5>
                         <hr/>
-                        <div class="media" th:each="question:${questionDTOList}">
+                        <div class="media" th:each="questionDTO:${pagination.getQuestionDTOList()}">
                             <div class="media-left">
                                 <a href="#">
-                                    <img class="media-object img-circle" th:src="${question.user.avatarUrl}"  >
+                                    <img class="media-object img-circle" th:src="${questionDTO.getUser().getAvatarUrl()}"  >
                                 </a>
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading" th:text="${question.title}"></h4>
-                                <span th:text="${question.description}"></span><br>
+                                <h4 class="media-heading" th:text="${questionDTO.getTitle()}"></h4>
+                                <span th:text="${questionDTO.getDescription()}"></span><br>
                                 <span class="text-desc">
-                                    <span th:text=" ${question.commentCnt}+个回复 "></span>
-                                    <span th:text=" ${question.viewCnt}+次浏览 "></span>
-                                    <span th:text=" 发布时间：+${#dates.format(question.getGmtCreate(),'yyyy-MM-dd HH:mm')}"></span>
+                                    <span th:text=" ${questionDTO.getCommentCnt()}+个回复 "></span>
+                                    <span th:text=" ${questionDTO.getViewCnt()}+次浏览 "></span>
+                                    <span th:text=" 发布时间：+${#dates.format(questionDTO.getGmtCreate(),'yyyy-MM-dd HH:mm')}"></span>
                                 </span>
                             </div>
                         </div>
+
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li th:if="${pagination.isShowBegin()}">
+                                    <a href="/?page=1" aria-label="Previous">
+                                    <span aria-hidden="true">&lt;&lt;</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagination.isShowPreviousPage()}">
+                                    <a th:href="@{/(page=${pagination.getPage()-1})}" aria-label="Previous">
+                                        <span  aria-hidden="true">&lt;</span>
+                                    </a>
+                                </li>
+                                <li th:each="page:${pagination.getPageList()}" th:class="${pagination.getPage()==page}?'active':''">
+                                    <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                                </li>
+                                <li th:if="${pagination.isShowNextPage()}">
+                                    <a th:href="@{/(page=${pagination.getPage()+1})}" aria-label="Previous">
+                                        <span aria-hidden="true">&gt;</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagination.isShowEnd()}">
+                                    <a th:href="@{/(page=${pagination.getTotalPages()})}" aria-label="Previous">
+                                        <span aria-hidden="true">&gt;&gt;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+
                     </div>
                         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                             <h2>热门话题</h2>

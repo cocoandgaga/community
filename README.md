@@ -34,12 +34,22 @@
   设置：ctrl+shit+alt+?--->Registry---->complier.automake.allow.when.app.running勾选
   构建项目：Build Project
   
-  6、数据表外键的体现
-  Question表字段creator关联User表字段account_id
-  model层拥有Question表的实体类和User表的实体类
-  dto层拥有QuestionDTo类，该类拥有Question表字段的类和一个private User user;
-  service层拥有QuestionService类，该类的功能是将Question表的creator值取出去查询User表并返回这个表对应id的user对象，然后添加到类型为QuestionDTO的list里，返回这个list
-  controller层调用service层的方法
+  6、
+  数据表外键在java类的做法：
+  例如：
+  Question表字段creator关联User表字段account_id。
+  做法：
+  model层，拥有Question表的实体类和User表的实体类
+  dto层，拥有QuestionDTo类，该类拥有Question表字段的类和一个private User user;
+  service层，拥有QuestionService类，该类的功能是将Question表的creator值取出去查询User表并返回这个表对应id的user对象，然后添加到类型为QuestionDTO的list里，返回这个list
+  controller层，调用service层的方法
+  
+  一些注意点：
+  FastJason可以自动把jason串下划线命名映射为驼峰命名法
+  提示没有getter也许是Mapper类sql字段写错
+  启动失败可能是h2连接没有关闭
+  
+  
   
   
  

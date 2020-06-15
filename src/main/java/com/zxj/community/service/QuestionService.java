@@ -1,5 +1,6 @@
 package com.zxj.community.service;
 
+import com.zxj.community.dto.PaginationDTO;
 import com.zxj.community.dto.QuestionDTO;
 import com.zxj.community.mapper.QuestionMapper;
 import com.zxj.community.mapper.UserMapper;
@@ -22,10 +23,22 @@ public class QuestionService {
     /**
      * 得到所有提问列表（包含User消息）
      * @return 包含用户消息的问题列表
+     * @param page
+     * @param size
      */
-     public List<QuestionDTO> list(){
+     public PaginationDTO list(Integer page, Integer size){
+
+         PaginationDTO totalPagesDTO=new PaginationDTO();
+         Integer totalCnt=questionMapper.count();
+         totalPagesDTO.setPagination(totalCnt,page,size);
+
+         if(page<1) page=1;
+         if(page>totalCnt) page=totalPagesDTO.getTotalPages();
+
+
+         Integer offset=size*(page-1);
          //列出数据库里的每一条提问数据
-         List<Question> questions=questionMapper.list();
+         List<Question> questions=questionMapper.list(offset,size);
          List<QuestionDTO> questionDTOList=new ArrayList<>();
          for(Question question:questions){
              User user=userMapper.findById(question.getCreator());
@@ -35,6 +48,8 @@ public class QuestionService {
              questionDTO.setUser(user);
              questionDTOList.add(questionDTO);
          }
-         return questionDTOList;
+
+         totalPagesDTO.setQuestionDTOList(questionDTOList);
+         return totalPagesDTO;
      }
 }
