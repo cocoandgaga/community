@@ -15,7 +15,7 @@ public class QuestionPageController {
     private QuestionService questionService;
 
     @GetMapping("/questionPage/{id}")
-    public String questionPage(@PathVariable(name = "id")String id,
+    public String questionPage(@PathVariable(name = "id")Integer id,
                                Model model){
 
         QuestionDTO questionDTO=questionService.getById(id);

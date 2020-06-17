@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface QuestionMapper {
     @Insert("insert into question(title,description,tag,gmt_create,gmt_modified,creator) values(#{title},#{description},#{tag},#{gmtCreate},#{gmtModified},#{creator})")
-    public void create(Question question);
+    void create(Question question);
 
     @Select("select * from question limit #{offset},#{size}")
     List<Question> list(@Param(value = "offset") Integer offset,@Param(value = "size") Integer size);
@@ -24,5 +24,8 @@ public interface QuestionMapper {
     Integer countByUserId(@Param(value = "accountId")String accountId);
 
     @Select("select * from question where id=#{id}")
-    Question getById(String id);
+    Question getById(@Param(value = "id") Integer id);
+
+    @Select("update question set title=#{title},description=#{description},gmt_modified=#{gmtModified},tag=#{tag} where id=#{id}")
+    void update(Question question);
 }
