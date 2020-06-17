@@ -2,8 +2,13 @@
 ##cocoandgaga's community 
  笔记： 
  1、
+ springweb写法的简单例子
  [springWeb文档]         
  https://spring.io/guides/gs/serving-web-content/
+ 拦截器写法的简单例子
+ [拦截器]
+ https://docs.spring.io/spring/docs/5.2.7.RELEASE/spring-framework-reference/web.html#websocket-stomp-interceptors
+ 
  2、
  前端框架
  [Segment UI前端框架]  
@@ -11,6 +16,7 @@
  
  [Bootstrap框架]
  https://v3.bootcss.com/components/#media
+ 
  3、
  查阅Thymeleaf语法资料
  [Thymeleaf官网]   
@@ -26,7 +32,7 @@
  [Developer Tools]:
  https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/htmlsingle/#using-boot-devtools
  
-  这个插件可以动态更新热部署过的页面
+  插件 动态更新热部署过的页面
   [LiveReload]
   https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related
   
@@ -48,6 +54,7 @@
   FastJason可以自动把jason串下划线命名映射为驼峰命名法
   提示没有getter也许是Mapper类sql字段写错
   启动失败可能是h2连接没有关闭
+  提示template之类出错的可能是private字段没有用.getXX方法获取而直接.XX获取
   
   
   

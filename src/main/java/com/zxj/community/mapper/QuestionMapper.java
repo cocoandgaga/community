@@ -20,4 +20,9 @@ public interface QuestionMapper {
 
     @Select("select count(1) from question")
     Integer count();
+    @Select("select count(1) from question where creator=#{accountId}")
+    Integer countByUserId(@Param(value = "accountId")String accountId);
+
+    @Select("select * from question where id=#{id}")
+    Question getById(String id);
 }

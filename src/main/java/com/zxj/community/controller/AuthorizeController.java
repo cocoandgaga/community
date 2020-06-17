@@ -22,17 +22,17 @@ public class AuthorizeController {
     @Autowired
     private GiteeProvider giteeProvider;
     @Value("${gitee.client.id}")
-    private String        clientId;
+    private String     clientId;
     @Value("${gitee.client.secret}")
-    private String clientSecret;
+    private String     clientSecret;
     @Value("${gitee.redirect.uri}")
-    private String redirectUri;
+    private String     redirectUri;
     @Autowired
     private UserMapper userMapper;
 
     @GetMapping("/callback")
-    public String callback(@RequestParam(name="code")String code,@RequestParam(name="state")String state,
-                            HttpServletResponse response) {
+    public String callback(@RequestParam(name = "code") String code, @RequestParam(name = "state") String state,
+                           HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setCode(code);
         accessTokenDTO.setClient_id(clientId);
@@ -40,26 +40,42 @@ public class AuthorizeController {
         accessTokenDTO.setRedirect_uri(redirectUri);
         accessTokenDTO.setState(state);
 
-        String accessToken=giteeProvider.getAccessToken(accessTokenDTO);//ctr+alt+v
-        System.out.println("token:"+accessToken);
-        GiteeUser giteeUser =giteeProvider.getUser(accessToken);
-        System.out.println("userName="+giteeUser.getName());
-        if(giteeUser != null && giteeUser.getId()!=null){
-            User user=new User();
-            String token=UUID.randomUUID().toString();
+        String accessToken = giteeProvider.getAccessToken(accessTokenDTO);//ctr+alt+v
+        System.out.println("token:" + accessToken);
+        GiteeUser giteeUser = giteeProvider.getUser(accessToken);
+        System.out.println("userName=" + giteeUser.getName());
+        if (giteeUser != null && giteeUser.getId() != null) {
+            User user = new User();
+            String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(giteeUser.getName());
             user.setAvatarUrl(giteeUser.getAvatarUrl());
             user.setAccountId(String.valueOf(giteeUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            userMapper.insert(user);
-            response.addCookie(new Cookie("token",token));
+            User user1 = userMapper.findByAccountId(user.getAccountId());
+            if (user1 != null) {
+                userMapper.update(user);
+            } else {
+                userMapper.insert(user);
+            }
+            response.addCookie(new Cookie("token", token));
 
             return "redirect:/";
-        }else{
+        } else {
+            //登陆失败，重新登陆
             return "redirect:/";
         }
+    }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

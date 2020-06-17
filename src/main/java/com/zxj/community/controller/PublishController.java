@@ -1,7 +1,6 @@
 package com.zxj.community.controller;
 
 import com.zxj.community.mapper.QuestionMapper;
-import com.zxj.community.mapper.UserMapper;
 import com.zxj.community.model.Question;
 import com.zxj.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
@@ -19,26 +17,9 @@ public class PublishController {
 
     @Autowired
     private QuestionMapper questionMapper;
-    @Autowired
-    private UserMapper     userMapper;
+
     @GetMapping("/publish")
-    public String publish( HttpServletRequest request){
-        User user=null;
-        Cookie[] cookies=request.getCookies();
-        if(cookies!=null && cookies.length!=0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
-        return "publish";
-    }
+    public String doPublish(){return "publish";}
 
     @PostMapping("/publish")
     public String doPublish(@RequestParam(value = "title",required = false)String title,
@@ -63,21 +44,8 @@ public class PublishController {
             return "publish";
         }
 
+        User user= (User) request.getSession().getAttribute("user");
 
-        User user=null;
-        Cookie[] cookies=request.getCookies();
-        if(cookies!=null && cookies.length!=0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                     user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
         if(user==null) {
             model.addAttribute("error","用户未登陆");
             return "publish";
@@ -88,7 +56,7 @@ public class PublishController {
         question.setTag(tag);
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
-        question.setCreator(user.getId());
+        question.setCreator(user.getAccountId());
         questionMapper.create(question);
         return "redirect:/";
     }

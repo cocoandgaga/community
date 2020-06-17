@@ -15,7 +15,7 @@
 
         <link rel="stylesheet" href="/css/me.css">
         <meta charset="UTF-8">
-        <title>小小社区</title>
+        <title th:text="${sectionName}"></title>
     </head>
     <body>
         <nav class="navbar navbar-default" >
@@ -27,9 +27,7 @@
                 <div class="row">
                     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
                         <h5>
-                             <span class="glyphicon glyphicon-list" aria-hidden="true">
-                                 提问广场
-                             <span/>
+                             <span  th:text="${sectionName}"><span/>
                         </h5>
                         <hr/>
                         <div class="media" th:each="questionDTO:${pagination.getQuestionDTOs()}">
@@ -39,13 +37,8 @@
                                 </a>
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading" >
-                                    <a th:href="@{'/questionPage/'+${questionDTO.getId()}}">
-                                        <span th:text="${questionDTO.getTitle()}"></span>
-                                    </a>
-                                </h4>
-                                <span th:text="${questionDTO.getDescription()}"></span>
-                                <br>
+                                <h4 class="media-heading" th:text="${questionDTO.getTitle()}"></h4>
+                                <span th:text="${questionDTO.getDescription()}"></span><br>
                                 <span class="text-desc">
                                     <span th:text=" ${questionDTO.getCommentCnt()}+个回复 "></span>
                                     <span th:text=" ${questionDTO.getViewCnt()}+次浏览 "></span>
@@ -57,25 +50,27 @@
                         <nav aria-label="Page navigation">
                             <ul class="pagination">
                                 <li th:if="${pagination.isShowBegin()}">
-                                    <a href="/?page=1" aria-label="Previous">
-                                    <span aria-hidden="true">&lt;&lt;</span>
+                                    <a th:href="@{'/my/'+${section}(page=${1})}" aria-label="Previous">
+                                        <span aria-hidden="true">&lt;&lt;</span>
                                     </a>
                                 </li>
                                 <li th:if="${pagination.isShowPreviousPage()}">
-                                    <a th:href="@{/(page=${pagination.getPage()-1})}" aria-label="Previous">
+                                    <a th:href="@{/my/{section}(section=${section},page=${pagination.getPage()-1})}" aria-label="Previous">
                                         <span  aria-hidden="true">&lt;</span>
                                     </a>
                                 </li>
+
                                 <li th:each="page:${pagination.getPageList()}" th:class="${pagination.getPage()==page}?'active':''">
-                                    <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                                    <a th:href="@{'/my/'+${section}(page=${page})}" th:text="${page}">
+                                    </a>
                                 </li>
                                 <li th:if="${pagination.isShowNextPage()}">
-                                    <a th:href="@{/(page=${pagination.getPage()+1})}" aria-label="Previous">
+                                    <a th:href="@{/my/{section}(section=${section},page=${pagination.getPage()+1})}" aria-label="Previous">
                                         <span aria-hidden="true">&gt;</span>
                                     </a>
                                 </li>
                                 <li th:if="${pagination.isShowEnd()}">
-                                    <a th:href="@{/(page=${pagination.getTotalPages()})}" aria-label="Previous">
+                                    <a th:href="@{/my/{section}(section=${section},page=${pagination.getTotalPages()})}" aria-label="Previous">
                                         <span aria-hidden="true">&gt;&gt;</span>
                                     </a>
                                 </li>
@@ -83,18 +78,20 @@
                         </nav>
 
                     </div>
-                        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                            <h2>热门话题</h2>
+                    <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item disabled">
+                                列表
+                            </a>
+                            <a href="/my/myQuestions" th:class="${section}=='myQuestions'?'active list-group-item':'list-group-item'">提问历史</a>
+                            <a href="/my/replies" th:class="${section}=='replies'?'active list-group-item':'list-group-item'">回复<span class="badge">14</span> </a>
                         </div>
                     </div>
-
                 </div>
 
             </div>
 
-
-
-
+            </div>
 
         </nav>
     </body>

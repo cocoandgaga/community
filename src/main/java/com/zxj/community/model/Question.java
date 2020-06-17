@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Question {
     private Integer id;
-    private Integer creator;
+    private String creator;
     private String title;
     private String description;
     private String tag;
