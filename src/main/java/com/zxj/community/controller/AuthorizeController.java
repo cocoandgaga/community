@@ -3,8 +3,9 @@ package com.zxj.community.controller;
 import com.zxj.community.dto.AccessTokenDTO;
 import com.zxj.community.dto.GiteeUser;
 import com.zxj.community.mapper.UserMapper;
-import com.zxj.community.provider.GiteeProvider;
 import com.zxj.community.model.User;
+import com.zxj.community.provider.GiteeProvider;
+import com.zxj.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import java.util.UUID;
 @Controller
 public class AuthorizeController {
 
+    @Autowired
+    private UserService userService;
     @Autowired
     private GiteeProvider giteeProvider;
     @Value("${gitee.client.id}")
@@ -48,19 +51,15 @@ public class AuthorizeController {
             User user = new User();
             String token = UUID.randomUUID().toString();
             user.setToken(token);
+            user.setBio(giteeUser.getBio());
             user.setName(giteeUser.getName());
             user.setAvatarUrl(giteeUser.getAvatarUrl());
             user.setAccountId(String.valueOf(giteeUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            User user1 = userMapper.findByAccountId(user.getAccountId());
-            if (user1 != null) {
-                userMapper.update(user);
-            } else {
-                userMapper.insert(user);
-            }
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token", token));
-
+            //登陆成功
             return "redirect:/";
         } else {
             //登陆失败，重新登陆

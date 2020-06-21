@@ -2,10 +2,15 @@ package com.zxj.community.service;
 
 import com.zxj.community.dto.PaginationDTO;
 import com.zxj.community.dto.QuestionDTO;
+import com.zxj.community.exception.CustomizeErrorCode;
+import com.zxj.community.exception.CustomizeException;
+import com.zxj.community.mapper.QuestionExtMapper;
 import com.zxj.community.mapper.QuestionMapper;
 import com.zxj.community.mapper.UserMapper;
 import com.zxj.community.model.Question;
+import com.zxj.community.model.QuestionExample;
 import com.zxj.community.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +23,9 @@ public class QuestionService {
      @Autowired
     private QuestionMapper questionMapper;
      @Autowired
-    private UserMapper userMapper;
+    private  UserMapper        userMapper;
+     @Autowired
+     private QuestionExtMapper questionExtMapper;
 
     /**
      * 得到所有提问列表（包含User消息）
@@ -29,19 +36,25 @@ public class QuestionService {
      public PaginationDTO list(Integer page, Integer size){
 
          PaginationDTO totalPagesDTO=new PaginationDTO();
-         Integer totalCnt=questionMapper.count();
-         Integer totalPages=(totalCnt+size-1)/size;
+         Integer totalPages;
+         QuestionExample questionExample=new QuestionExample();
+         Integer totalCnt= Math.toIntExact(questionMapper.countByExample(questionExample));
+
+         totalPages=(totalCnt+size-1)/size;
          if(page<1) page=1;
          if(page>totalPages) page=totalPages;
 
          totalPagesDTO.setPagination(totalPages,page);
 
          Integer offset=size*(page-1);
+
          //列出数据库里的每一条提问数据
-         List<Question> questions=questionMapper.list(offset,size);
+         List<Question> questions=questionMapper.selectByExampleWithRowbounds(
+                 new QuestionExample(),new RowBounds(offset,size));
+
          List<QuestionDTO> questionDTOs=new ArrayList<>();
          for(Question question:questions){
-             User user=userMapper.findById(question.getCreator());
+             User user=userMapper.selectByPrimaryKey(question.getCreator());
              QuestionDTO questionDTO=new QuestionDTO();
              //快速地把question对象copy到DTO
              BeanUtils.copyProperties(question,questionDTO);
@@ -53,9 +66,14 @@ public class QuestionService {
          return totalPagesDTO;
      }
 
-    public PaginationDTO list(String userId, Integer page, Integer size) {
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
+
         PaginationDTO totalPagesDTO=new PaginationDTO();
-        Integer totalCnt=questionMapper.countByUserId(userId);
+
+        QuestionExample questionExample=new QuestionExample();
+        questionExample.createCriteria().andCreatorEqualTo(userId);
+
+        Integer totalCnt= Math.toIntExact(questionMapper.countByExample(questionExample));
         Integer totalPages=(totalCnt+size-1)/size;
         if(page<1) page=1;
         if(page>totalPages) page=totalPages;
@@ -64,10 +82,11 @@ public class QuestionService {
 
         Integer offset=size*(page-1);
         //列出数据库里的每一条提问数据
-        List<Question> questions=questionMapper.list(offset,size);
+        List<Question> questions=questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(offset,size));
+
         List<QuestionDTO> questionDTOs=new ArrayList<>();
         for(Question question:questions){
-            User user=userMapper.findById(question.getCreator());
+            User user=userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO=new QuestionDTO();
             //快速地把question对象copy到DTO
             BeanUtils.copyProperties(question,questionDTO);
@@ -80,11 +99,14 @@ public class QuestionService {
 
     }
 
-    public QuestionDTO getById(Integer id) {
-         Question question=questionMapper.getById(id);
+    public QuestionDTO getById(Long id) {
+         Question question=questionMapper.selectByPrimaryKey(id);
+         if(question==null) {
+             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUNT);
+         }
          QuestionDTO questionDTO=new QuestionDTO();
          BeanUtils.copyProperties(question,questionDTO);
-         User user=userMapper.findById(question.getCreator());
+         User user=userMapper.selectByPrimaryKey(question.getCreator());
          questionDTO.setUser(user);
          return questionDTO;
     }
@@ -93,10 +115,40 @@ public class QuestionService {
          if(question.getId()==null){
              question.setGmtCreate(System.currentTimeMillis());
              question.setGmtModified(question.getGmtCreate());
-             questionMapper.create(question);
+             //insertSelective 对应的 SQL 语句加入了 NULL 检验，只会插入数据不为 null 的字段 这样默认值起作用
+             //而 insert 会插入所有字段，会插入 null 数据。
+             questionMapper.insertSelective(question);
          }else{
-             question.setGmtModified(System.currentTimeMillis());
-             questionMapper.update(question);
+             Question updateQuestion=new Question();
+             updateQuestion.setGmtModified(System.currentTimeMillis());
+             updateQuestion.setTag(question.getTitle());
+             updateQuestion.setDescription(question.getDescription());
+             updateQuestion.setTag(question.getTag());
+             updateQuestion.setTitle(question.getTitle());
+             QuestionExample questionExample=new QuestionExample();
+             questionExample.createCriteria().andIdEqualTo(question.getId());
+             //更新不更新没更改的字段
+             // updateByPrimaryKeySelective 会对字段进行判断再更新（如果为 Null 就忽略更新）
+             //updateByPrimaryKey 对你注入的字段全部更新（不判断是否为 Null）
+             int IsUpdate=questionMapper.updateByExampleSelective(updateQuestion,questionExample);
+             if(IsUpdate!=1) {
+                 throw new CustomizeException(CustomizeErrorCode.UPDATE_FAILED);
+             }
+
          }
+    }
+
+    public void incViewCnt(Long id) {
+//         Question question=questionMapper.selectByPrimaryKey(id);
+//         Question updateQuestion=new Question();
+//         updateQuestion.setViewCnt(question.getViewCnt()+1);
+//         QuestionExample questionExample=new QuestionExample();
+//         questionExample.createCriteria().andIdEqualTo(id);
+//         questionMapper.updateByExampleSelective(updateQuestion,questionExample);
+            Question question=new Question();
+            question.setId(id);
+            question.setViewCnt(1);
+            questionExtMapper.incViewCnt(question);
+
     }
 }

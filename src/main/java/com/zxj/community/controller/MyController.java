@@ -36,7 +36,7 @@ public class MyController {
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","回复");
         }
-        PaginationDTO paginationDTO=questionService.list(user.getAccountId(),page,size);
+        PaginationDTO paginationDTO=questionService.list(user.getId(),page,size);
         model.addAttribute("pagination",paginationDTO);
         return "my";
 
