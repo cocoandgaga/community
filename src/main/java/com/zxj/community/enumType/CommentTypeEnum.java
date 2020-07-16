@@ -1,4 +1,4 @@
-package com.zxj.community.exception;
+package com.zxj.community.enumType;
 
 public enum  CommentTypeEnum {
     QUESTION(1),
@@ -14,7 +14,7 @@ public enum  CommentTypeEnum {
        for(CommentTypeEnum commentTypeEnum:CommentTypeEnum.values()){
            if(commentTypeEnum.getType() == type){
                return true;
-           }
+           } 
        }
        return false;
     }

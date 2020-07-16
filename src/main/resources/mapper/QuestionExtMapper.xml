@@ -27,4 +27,8 @@
         COMMENT_CNT=COMMENT_CNT + #{commentCnt,jdbcType=INTEGER}
         where id=#{id}
     </update>
+    <select id="selectRelated" parameterType="com.zxj.community.model.Question" resultMap="BaseResultMap">
+        select * from Question where  tag regexp #{tag} and id!=#{id}
+    </select>
+
 </mapper>

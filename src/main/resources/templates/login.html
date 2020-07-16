@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎登陆小小世界</title>
+    <style type="text/css">
+        a:link {
+            color: white;
+            text-decoration: none;
+        }
+        a:visited {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: white;
+        }
+        a:active {
+            text-decoration: none;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/font-awesome.css">
+</head>
+<!--src/main/view/static/css/font-awesom.css
+src/main/view/templates/login.html
+html的链接为css
+src/main/view/templates/login.html
+src/main/view/static/imags/bgp.jpg
+1、  ./是当前目录
+2、  ../是父级目录
+3、  /是根目录-->
+<div id="login-box">
+    <h1>Login</h1>
+        <div class="form">
+            <form method="post" action="index.html">
+                <div class="item">
+                    <i class="fa fa-user-circle-o"></i>
+                    <input type="text" placeholder="username">
+                </div>
+                <div class="item">
+                    <i class="fa fa-key"></i>
+                    <input type="password" placeholder="password">
+                </div>
+                <button>Login</button>
+            </form>
+        </div>
+        <div class="third">
+            <a href="index.html" ><span>忘了密码？|</span></a>
+            <a href="index.html"><span>注册新账户|</span></a>
+            <a href="index.html"><span>意见反馈</span></a>
+        </div>
+</div>
+</body>
+</html>

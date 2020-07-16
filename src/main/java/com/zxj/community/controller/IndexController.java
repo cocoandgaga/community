@@ -1,6 +1,7 @@
 package com.zxj.community.controller;
 
 import com.zxj.community.dto.PaginationDTO;
+import com.zxj.community.dto.QuestionDTO;
 import com.zxj.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class IndexController {
                         @RequestParam(name = "size",defaultValue = "5")Integer size){
 
         //获取问题列表(包含用户头像
-        PaginationDTO pagination=questionService.list(page,size);
+        PaginationDTO<QuestionDTO> pagination=questionService.list(page,size);
         model.addAttribute("pagination",pagination);
         return "index";
     }

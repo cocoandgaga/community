@@ -85,6 +85,48 @@
    controller层，调用service层的方法  
   
   
+  
+  
+  
+  
+  
+  
+  
+  mybatis generator使用：
+  
+  `TestTableExample example = new TestTableExample();  
+  example.createCriteria().andField1EqualTo(5);  
+  等同于：  
+  TestTableExample example = new TestTableExample();  
+  example.or().andField1EqualTo(5);   
+  等同于:  
+  where field1 = 5`  
+   
+  ` List<Integer> field5Values = new ArrayList<Integer>();   
+    field5Values.add(8);  
+    field5Values.add(11);  
+    field5Values.add(14);  
+    field5Values.add(22);   
+    example.or()  
+      .andField5In(field5Values);   
+    example.or()  
+      .andField6Between(3, 7);
+  等同于：
+     where (field5 in (8, 11, 14, 22))
+        or (field6 between 3 and 7)`
+        
+  `Example类用来处理MBG动态查询功能. Example类设置条件用于动态WHERE子句下列方法中:  
+  selectByExample  
+  selectByExampleWithBLOBs  
+  deleteByExample  
+  countByExample  
+  updateByExample`  
+  
+  `insert - will insert nulls
+  insertSelective - ignores null properties
+  UpdateByPrimaryKey - will set null values
+  UpdateByPrimaryKey Selective - ignores null values`
+  
  
  
  
