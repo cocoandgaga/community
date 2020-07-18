@@ -82,9 +82,7 @@ body {
     border: 1px solid #eee;
 }
 
-.marginandpadding{
-    margin-top: 5px;
-}
+
 .question-wechat{
     width: 50%;
 }
@@ -108,4 +106,17 @@ body {
 
 .question-tag {
     margin-right: 5px;
+}
+
+.marginandpadding{
+     margin-top: 5px;
+ }
+
+.marginandpaddingMax{
+    margin: 20px;
+}
+
+dd, dt {
+    line-height: 3.428571;
+    color: gray;
 }

@@ -19,13 +19,14 @@
         <title th:text="${sectionName}"></title>
     </head>
     <body>
-        <nav class="navbar navbar-default" >
+        <nav class="navbar navbar-default" style="margin: 0px;padding: 0px">
             <!--导航头-->
             <div th:insert="~{head :: nav}"></div>
 
             <!--中间内容-->
             <div class="container-fluid main">
                 <div class="row">
+                    <!--左边-->
                     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
                         <h5>
                              <span  th:text="${sectionName}"><span/>
@@ -96,6 +97,7 @@
                         </nav>
 
                     </div>
+                    <!--右边-->
                     <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                         <div class="list-group section">
                             <a href="#" class="list-group-item disabled">
@@ -106,11 +108,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
             </div>
-
         </nav>
     </body>
+    <div th:insert="~{foot :: footer}"></div>
 </html>

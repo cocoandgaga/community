@@ -1,6 +1,5 @@
 package com.zxj.community.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.zxj.community.dto.FileDTO;
 import com.zxj.community.provider.FileTransProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
 
 
 @Controller
@@ -33,7 +28,16 @@ public class FileTransportController {
         MultipartFile file=multipartHttpServletRequest.getFile("editormd-image-file");
         String result= fileTransProvider.upload(file.getInputStream(),file.getOriginalFilename());
         FileDTO fileDTO=new FileDTO();
-        fileDTO.setSuccess(1);
+        if(result!=null){
+            fileDTO.setSuccess(1);
+            fileDTO.setMessage("上传失败");
+        }
+
+        else{
+            fileDTO.setSuccess(0);
+            fileDTO.setMessage("上传成功");
+        }
+
         fileDTO.setUrl(result);
         return fileDTO;
     }

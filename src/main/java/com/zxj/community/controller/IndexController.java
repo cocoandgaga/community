@@ -19,7 +19,7 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(name = "page",defaultValue = "1")Integer page,
-                        @RequestParam(name = "size",defaultValue = "5")Integer size){
+                        @RequestParam(name = "size",defaultValue = "12")Integer size){
 
         //获取问题列表(包含用户头像
         PaginationDTO<QuestionDTO> pagination=questionService.list(page,size);

@@ -68,6 +68,11 @@
   用法：selectByExampleWithRowbounds，RowBounds提供了能返回指定限制长度和指定位置的记录，以便于分页。     
   参考链接：http://mybatis.org/generator/reference/plugins.html       
   
+  9、
+  [阿里云的文件存储oss]  
+  将图片上传到阿里云oss
+  参考文档：https://help.aliyun.com/document_detail/32016.html?spm=a2c4g.11186623.2.11.1d64a87cDlyZ9J#concept-32016-zh  
+  先创建ram的用户得到accesskey，再创建accesskeyid
   
 一些注意点：
   FastJason可以自动把jason串下划线命名映射为驼峰命名法  
@@ -83,11 +88,6 @@
    dto层，拥有QuestionDTo类，该类拥有Question表字段的类和一个private User user;  
    service层，拥有QuestionService类，该类的功能是将Question表的creator值取出去查询User表并返回这个表对应id的user对象，然后添加到类型为QuestionDTO的list里，返回这个list  
    controller层，调用service层的方法  
-  
-  
-  
-  
-  
   
   
   
