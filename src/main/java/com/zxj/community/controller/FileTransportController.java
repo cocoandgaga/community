@@ -31,11 +31,10 @@ public class FileTransportController {
 
        MultipartHttpServletRequest multipartHttpServletRequest= (MultipartHttpServletRequest) request;
         MultipartFile file=multipartHttpServletRequest.getFile("editormd-image-file");
-        fileTransProvider.upload(file.getInputStream(),file.getOriginalFilename());
-
+        String result= fileTransProvider.upload(file.getInputStream(),file.getOriginalFilename());
         FileDTO fileDTO=new FileDTO();
         fileDTO.setSuccess(1);
-        fileDTO.setUrl("/img/wechat.png");
+        fileDTO.setUrl(result);
         return fileDTO;
     }
 
