@@ -6,6 +6,7 @@ import com.zxj.community.mapper.UserMapper;
 import com.zxj.community.model.User;
 import com.zxj.community.provider.GiteeProvider;
 import com.zxj.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 public class AuthorizeController {
 
@@ -62,6 +64,7 @@ public class AuthorizeController {
             //登陆成功
             return "redirect:/";
         } else {
+            log.error("第三方接入登陆失败");
             //登陆失败，重新登陆
             return "redirect:/";
         }

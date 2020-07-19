@@ -100,16 +100,14 @@ body {
     border-radius: 1.25em
 }
 
-.comment_section .media{
-    margin:5px;
-}
+
 
 .question-tag {
     margin-right: 5px;
 }
 
 .marginandpadding{
-     margin-top: 5px;
+     margin: 5px;
  }
 
 .marginandpaddingMax{
@@ -120,3 +118,5 @@ dd, dt {
     line-height: 3.428571;
     color: gray;
 }
+
+.median

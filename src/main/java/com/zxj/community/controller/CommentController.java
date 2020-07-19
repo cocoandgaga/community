@@ -6,7 +6,6 @@ import com.zxj.community.dto.ResultDTO;
 import com.zxj.community.enumType.CommentTypeEnum;
 import com.zxj.community.exception.CustomizeErrorCode;
 import com.zxj.community.model.Comment;
-import com.zxj.community.model.Notification;
 import com.zxj.community.model.User;
 import com.zxj.community.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
